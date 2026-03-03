@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Student ID</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #0ea5e9;
+            --text-dark: #1e293b;
+            --card-bg: #ffffff;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #f1f5f9; 
+            display: flex; flex-direction: column; align-items: center; 
+            padding: 40px 20px; margin: 0;
+        }
+
+        /* Modern Navigation Buttons */
+        .actions { 
+            margin-bottom: 40px; display: flex; gap: 20px; 
+            background: white; padding: 15px 30px; border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .btn {
+            padding: 12px 28px; border: none; border-radius: 30px;
+            color: white; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; gap: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn:active { transform: scale(0.95); }
+
+        .btn-pdf { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .btn-print { background: linear-gradient(135deg, #0ea5e9, #2563eb); }
+        .btn-db { background: linear-gradient(135deg, #10b981, #059669); }
+
+        /* ID Card Layout */
+        .id-card-wrapper { 
+            display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;
+            padding: 20px;
+        }
+
+        .card { 
+            width: 350px; height: 520px; background: var(--card-bg); 
+            border-radius: 24px; overflow: hidden; position: relative; 
+            box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.15);
+            border: 1px solid #e2e8f0;
+        }
+        
+        /* Front Side Styling */
+        .header-bg { 
+            height: 120px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white; text-align: center; padding: 25px 20px; position: relative;
+        }
+
+        .photo-container { 
+            width: 125px; height: 125px; border: 5px solid white; 
+            margin: -85px auto 15px; border-radius: 30px; 
+            overflow: hidden; position: relative; z-index: 5;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); background: #eee;
+        }
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .info-section { padding: 0 20px; text-align: center; }
+        .info-name { margin: 0; color: var(--text-dark); font-size: 22px; font-weight: 800; }
+        .id-badge {
+            display: inline-block; background: #eef2ff; color: var(--primary);
+            padding: 4px 14px; border-radius: 10px; font-size: 13px;
+            font-weight: 700; margin: 8px 0 20px;
+        }
+
+        .details-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            text-align: left; border-top: 1px solid #f1f5f9; padding-top: 15px;
+        }
+        .detail-box label { font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase; }
+        .detail-box span { font-size: 14px; color: #334155; font-weight: 600; display: block; }
+
+        /* Bottom Section: Signature & QR */
+        .card-footer {
+            position: absolute; bottom: 25px; left: 0; right: 0;
+            padding: 0 25px; display: flex; justify-content: space-between; align-items: flex-end;
+        }
+        .sig-box { text-align: center; margin-bottom: 5px; }
+        .sig-line { width: 100px; height: 1px; background: #cbd5e1; margin-bottom: 5px; }
+        .sig-text { font-size: 9px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+        
+        .qr-wrapper { 
+            background: #fff; 
+            padding: 4px; 
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+            border: 1px solid #f1f5f9;
+            position: center;
+        }
+        
+        #qrcode img {
+    width: 125px;
+    height: 125px;
+    display: block;
+    margin: 0 auto;
+}
+
+        /* Back Side */
+        .back-content { 
+            padding: 40px 30px; height: 100%; display: flex; 
+            flex-direction: column; justify-content: space-between; text-align: center;
+            box-sizing: border-box; background: radial-gradient(circle at top right, #f8fafc, #ffffff);
+        }
+        .school-logo { width: 70px; margin-bottom: 10px; }
+        .school-name { font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1.2; }
+        
+        .terms { font-size: 11px; color: #64748b; text-align: left; line-height: 1.6; margin: 20px 0; }
+        .contact-card { 
+            background: #f8fafc; padding: 15px; border-radius: 16px; 
+            font-size: 11px; color: #475569; border: 1px solid #e2e8f0;
+        }
+
+        @media print { .actions { display: none; } body { background: white; } }
+    </style>
+</head>
+<body>
+
+<div class="actions">
+    <button class="btn btn-pdf" onclick="downloadPDF()">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 16l-4-4h3V4h2v8h3l-4 4zm9-4v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6h2v6h14v-6h2z"/></svg>
+        Save as PDF
+    </button>
+    <button class="btn btn-print" onclick="window.print()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+        Print
+    </button>
+</div>
+
+<div class="id-card-wrapper" id="id-content">
+    <div class="card" id="front-card">
+        <div class="header-bg">
+            <div style="font-weight: 800; font-size: 18px; letter-spacing: 1.5px;">STUDENT ID CARD</div>
+            <div style="font-size: 12px; opacity: 0.9; font-weight: 500;">Academic Session 2025-26</div>
+        </div>
+        
+        <div class="photo-container">
+            <img id="displayPhoto" src="https://via.placeholder.com/150" alt="Student">
+        </div>
+
+        <div class="info-section">
+            <h3 class="info-name" id="displayName">ALEXANDER SMITH</h3>
+            <div class="id-badge">ID: <span id="displayId">STU-88290</span></div>
+            
+            <div class="details-grid">
+                <div class="detail-box">
+                    <label>Class</label>
+                    <span id="displayClass">Grade 10</span>
+                </div>
+                <div class="detail-box">
+                    <label>Roll No</label>
+                    <span id="displayRoll">05</span>
+                </div>
+                <div class="detail-box">
+                    <label>Blood Group</label>
+                    <span id="displayBlood">O+ Positive</span>
+                </div>
+                <div class="detail-box">
+                    <label>Date of Birth</label>
+                    <span id="displayDOB">01-01-2010</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="sig-box">
+                <div style="height: 40px;"></div> <div class="sig-line"></div>
+                <div class="sig-text">Principal</div>
+            </div>
+            <div class="qr-wrapper">
+                <div id="qrcode"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="back-card">
+        <div class="back-content">
+            <div>
+                <img src="logo.png" alt="Logo" class="school-logo">
+                <h2 class="school-name">MADARGANJ ABDUL ALI MIRZA KASEM KAMIL MADRASAH</h2>
+            </div>
+
+            <div class="terms">
+                <strong>Terms & Conditions:</strong>
+                <ul style="padding-left: 15px; margin: 5px 0;">
+                    <li>This card is non-transferable.</li>
+                    <li>Loss of card must be reported immediately.</li>
+                    <li>Student must carry this card in campus.</li>
+                </ul>
+            </div>
+
+            <div class="contact-card">
+                <strong>Campus Address:</strong><br>
+                123 Education Street, Dhaka, Bangladesh<br>
+                Tel: +880 1234 567890<br>
+                www.school.edu.bd
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    const student = JSON.parse(localStorage.getItem('currentStudent'));
+
+    if(student) {
+        document.getElementById('displayName').innerText = student.name.toUpperCase();
+        document.getElementById('displayId').innerText = student.id;
+        document.getElementById('displayClass').innerText = student.class;
+        document.getElementById('displayRoll').innerText = student.roll;
+        document.getElementById('displayBlood').innerText = student.blood;
+        document.getElementById('displayDOB').innerText = student.dob;
+        if(student.photo) document.getElementById('displayPhoto').src = student.photo;
+
+        new QRCode(document.getElementById("qrcode"), {
+    text: `Guardian: ${student.guardianName} | Mobile: ${student.guardianMobile}`,
+    width: 62,
+    height: 62,
+    colorDark: "#1e293b",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+});
+
+    }
+
+    function downloadPDF() {
+        const element = document.getElementById('id-content');
+        const opt = {
+            margin:       10,
+            filename:     `ID_Card_${student ? student.id : 'student'}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 3, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        };
+        
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
+
+</body>
+</html>
