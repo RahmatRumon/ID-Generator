@@ -69,7 +69,7 @@
         }
         .photo-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        .info-section { padding: 0 20px; text-align: center; }
+        .info-section { padding: 0 20px; text-align: center; padding-bottom: 110px; }
         .info-name { margin: 0; color: var(--text-dark); font-size: 22px; font-weight: 800; }
         .id-badge {
             display: inline-block; background: #eef2ff; color: var(--primary);
@@ -92,20 +92,22 @@
         .sig-line { width: 100px; height: 1px; background: #cbd5e1; margin-bottom: 5px; }
         .sig-text { font-size: 9px; font-weight: 700; color: #64748b; text-transform: uppercase; }
         
-        .qr-wrapper { 
-            background: #fff; 
-            padding: 4px; 
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-            border: 1px solid #f1f5f9;
-            position: center;
-        }
-        
-        #qrcode img {
-    width: 80px;
-    height: 80px;
-    display: block;
-    margin: 0 auto;
+        .qr-wrapper{
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  padding: 4px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+#qrcode canvas,
+#qrcode img{
+  width: 55px !important;
+  height: 55px !important;
+  display: block;
 }
 
         .back-content { 
@@ -174,10 +176,10 @@
         </div>
 
         <div class="card-footer">
-            <div class="sig-box">
-                <div style="height: 120px;"></div> <div class="sig-line"></div>
-                <div class="sig-text">Principal</div>
-            </div>
+                <div class="sig-box">
+  <div class="sig-line"></div>
+  <div class="sig-text">Principal</div>
+</div>
             <div class="qr-wrapper">
                 <div id="qrcode"></div>
             </div>
@@ -225,8 +227,8 @@
 
         new QRCode(document.getElementById("qrcode"), {
     text: `Guardian: ${student.guardianName} | Mobile: ${student.guardianMobile}`,
-    width: 62,
-    height: 62,
+    width: 55,
+    height: 55,
     colorDark: "#1e293b",
     colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.H
