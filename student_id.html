@@ -226,7 +226,7 @@
         if(student.photo) document.getElementById('displayPhoto').src = student.photo;
 
         new QRCode(document.getElementById("qrcode"), {
-    text: `Guardian: ${student.guardian} | Mobile: ${guardian.mobile}`,
+    text: `Guardian: ${student.guardian} | Mobile: ${student.guardian}`,
     width: 55,
     height: 55,
     colorDark: "#1e293b",
